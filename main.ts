@@ -16,9 +16,13 @@ export default class EmacsLikeKeybindingsPlugin extends Plugin {
       id: 'newline',
       name: 'Newline',
       editorCallback: (editor: Editor, view: MarkdownView) => {
-        this.log('command newline - Start');
+        const logPrefix: string = 'command newline';
+
+        this.log(`${logPrefix} - Start`);
+
         editor.exec('newlineAndIndent');
-        this.log('command newline - End');
+
+        this.log(`${logPrefix} - End`);
       },
       hotkeys: [{
         modifiers: ['Ctrl'],
