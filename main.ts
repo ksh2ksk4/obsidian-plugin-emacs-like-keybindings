@@ -45,7 +45,7 @@ export default class EmacsLikeKeybindingsPlugin extends Plugin {
         const killedText: string = line.slice(position.ch);
         this.log(`${logPrefix} - ${remainingText}`);
         this.log(`${logPrefix} - ${killedText}`);
-        // https://developer.mozilla.org/ja/docs/Web/API/Navigator
+        // https://developer.mozilla.org/ja/docs/Web/API/Clipboard
         navigator.clipboard.writeText(killedText);
         editor.setLine(position.line, remainingText);
         editor.setCursor(position, position.ch);
