@@ -58,6 +58,27 @@ export default class EmacsLikeKeybindingsPlugin extends Plugin {
       }]
     });
 
+    this.addCommand({
+      id: 'yank',
+      name: 'Yank',
+      editorCallback: (editor: Editor, view: MarkdownView) => {
+        const logPrefix: string = 'command yank';
+
+        this.log(`${logPrefix} - Start`);
+
+        // https://developer.mozilla.org/ja/docs/Web/API/Clipboard
+        navigator.clipboard.readText().then((text) => {
+          editor.replaceSelection(text);
+        });
+
+        this.log(`${logPrefix} - End`);
+      },
+      hotkeys: [{
+        modifiers: ['Ctrl'],
+        key: 'y'
+      }]
+    });
+
     this.log('onload() - End');
   }
 
