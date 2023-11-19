@@ -1,4 +1,14 @@
-import { App, Editor, EditorPosition, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import {
+  App,
+  Editor,
+  EditorPosition,
+  MarkdownView,
+  Modal,
+  Notice,
+  Plugin,
+  PluginSettingTab,
+  Setting
+} from 'obsidian';
 
 export default class EmacsLikeKeybindingsPlugin extends Plugin {
   private readonly pluginName = 'EmacsLikeKeybindingsPlugin';
