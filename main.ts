@@ -3,8 +3,8 @@ import { App, Editor, EditorPosition, MarkdownView, Modal, Notice, Plugin, Plugi
 export default class EmacsLikeKeybindingsPlugin extends Plugin {
   private readonly pluginName = 'EmacsLikeKeybindingsPlugin';
 
-  private log(message: string, param: any = null): void {
-    param == null ?
+  private log(message: string, param: any = undefined): void {
+    param == undefined ?
       console.log(`${this.pluginName}: ${message}`) :
       console.log(`${this.pluginName}: ${message}`, param);
   }
