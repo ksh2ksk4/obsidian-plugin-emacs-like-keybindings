@@ -7,7 +7,8 @@ import {
   Notice,
   Plugin,
   PluginSettingTab,
-  Setting
+  Setting,
+  TFile
 } from 'obsidian';
 
 export default class EmacsLikeKeybindingsPlugin extends Plugin {
@@ -22,7 +23,12 @@ export default class EmacsLikeKeybindingsPlugin extends Plugin {
   async onload() {
     this.log('onload() - Start');
 
-    let mark: EditorPosition;
+    type Mark = {
+      path: string;
+      editorPosition: EditorPosition;
+    };
+
+    let marks: Mark[] = [];
 
     this.addCommand({
       id: 'newline',
@@ -91,7 +97,6 @@ export default class EmacsLikeKeybindingsPlugin extends Plugin {
       }]
     });
 
-    //todo ファイル単位でマーキングできるようにする
     this.addCommand({
       id: 'set-mark-command',
       name: 'Set mark command',
@@ -100,8 +105,27 @@ export default class EmacsLikeKeybindingsPlugin extends Plugin {
 
         this.log(`${logPrefix} - Start`);
 
-        mark = editor.getCursor();
-        this.log(`${logPrefix} - %o`, mark);
+        const activeFile: TFile | null = this.app.workspace.getActiveFile();
+        this.log(`${logPrefix} - %o`, activeFile);
+
+        if (!activeFile) {
+          this.log(`${logPrefix} - End`);
+
+          return;
+        }
+
+        const mark = marks.find((v: Mark) => v.path === activeFile.path);
+
+        if (mark) {
+          mark.editorPosition = editor.getCursor();
+        } else {
+          marks.push({
+            path: activeFile.path,
+            editorPosition: editor.getCursor()
+          });
+        }
+
+        this.log(`${logPrefix} - %o`, marks);
 
         this.log(`${logPrefix} - End`);
       },
@@ -119,15 +143,33 @@ export default class EmacsLikeKeybindingsPlugin extends Plugin {
 
         this.log(`${logPrefix} - Start`);
 
+        const activeFile: TFile | null = this.app.workspace.getActiveFile();
+        this.log(`${logPrefix} - %o`, activeFile);
+
+        if (!activeFile) {
+          this.log(`${logPrefix} - End`);
+
+          return;
+        }
+
+        const mark = marks.find((v: Mark) => v.path === activeFile.path);
+
+        if (!mark) {
+          this.log(`${logPrefix} - This file has no marks`);
+          this.log(`${logPrefix} - End`);
+
+          return;
+        }
+
         const position: EditorPosition = editor.getCursor();
         this.log(`${logPrefix} - %o`, mark);
         this.log(`${logPrefix} - %o`, position);
 
-        const killedText: string = editor.getRange(mark, position);
+        const killedText: string = editor.getRange(mark.editorPosition, position);
         this.log(`${logPrefix} - %o`, killedText);
         // https://developer.mozilla.org/ja/docs/Web/API/Clipboard
         navigator.clipboard.writeText(killedText);
-        editor.replaceRange('', mark, position);
+        editor.replaceRange('', mark.editorPosition, position);
 
         this.log(`${logPrefix} - End`);
       },
