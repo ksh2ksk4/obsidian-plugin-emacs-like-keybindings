@@ -12,6 +12,8 @@ export default class EmacsLikeKeybindingsPlugin extends Plugin {
   async onload() {
     this.log('onload() - Start');
 
+    let mark: EditorPosition;
+
     this.addCommand({
       id: 'newline',
       name: 'Newline',
@@ -76,6 +78,25 @@ export default class EmacsLikeKeybindingsPlugin extends Plugin {
       hotkeys: [{
         modifiers: ['Ctrl'],
         key: 'y'
+      }]
+    });
+
+    this.addCommand({
+      id: 'set-mark-command',
+      name: 'Set mark command',
+      editorCallback: (editor: Editor, view: MarkdownView) => {
+        const logPrefix: string = 'command set-mark-command';
+
+        this.log(`${logPrefix} - Start`);
+
+        mark = editor.getCursor();
+        this.log(`${logPrefix} - %o`, mark);
+
+        this.log(`${logPrefix} - End`);
+      },
+      hotkeys: [{
+        modifiers: ['Ctrl'],
+        key: ' '
       }]
     });
 
