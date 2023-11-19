@@ -91,6 +91,7 @@ export default class EmacsLikeKeybindingsPlugin extends Plugin {
       }]
     });
 
+    //todo ファイル単位でマーキングできるようにする
     this.addCommand({
       id: 'set-mark-command',
       name: 'Set mark command',
@@ -107,6 +108,32 @@ export default class EmacsLikeKeybindingsPlugin extends Plugin {
       hotkeys: [{
         modifiers: ['Ctrl'],
         key: ' '
+      }]
+    });
+
+    this.addCommand({
+      id: 'kill-region',
+      name: 'Kill region',
+      editorCallback: (editor: Editor, view: MarkdownView) => {
+        const logPrefix: string = 'command kill-region';
+
+        this.log(`${logPrefix} - Start`);
+
+        const position: EditorPosition = editor.getCursor();
+        this.log(`${logPrefix} - %o`, mark);
+        this.log(`${logPrefix} - %o`, position);
+
+        const killedText: string = editor.getRange(mark, position);
+        this.log(`${logPrefix} - %o`, killedText);
+        // https://developer.mozilla.org/ja/docs/Web/API/Clipboard
+        navigator.clipboard.writeText(killedText);
+        editor.replaceRange('', mark, position);
+
+        this.log(`${logPrefix} - End`);
+      },
+      hotkeys: [{
+        modifiers: ['Ctrl'],
+        key: 'w'
       }]
     });
 
